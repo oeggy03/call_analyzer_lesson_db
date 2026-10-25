@@ -10,17 +10,18 @@ this repository defines the shared tables and their meaning.
 ../
 ├── call_analyzer/                  # macOS desktop app and local SQLite database
 ├── call-analyzer-lesson-db/        # this repository
-└── call-analyzer-active-recall/    # future Cloud Run Telegram recall service
+└── call-analyzer-active-recall/    # live Cloud Run Telegram recall service
 ```
 
 ## Ownership
 
-The desktop app writes lessons, transcript segments, vocabulary, dictionary
-details, observations, tags, and entry-tag relationships. The future recall
-service will append review events and update study state. The desktop pulls
-those two tables and does not push them back over a newer cloud row. The
-desktop-only `outbox`, `settings`, and `request_usage` tables are not part of
-this schema.
+The desktop runner currently pushes confirmed and manually saved vocabulary,
+including senses, examples, and tags, and pulls confirmed vocabulary on
+launch. The recall service reads those confirmed rows for the 9:00 Telegram
+message and does not write reviews yet. Lessons, transcripts, observations,
+and review events are in the schema and are not written by either app yet.
+The desktop-only `outbox`, `settings`, and `request_usage` tables are not
+part of this schema.
 
 See [`docs/ownership.md`](docs/ownership.md) for the canonical ownership note,
 schema-change order, RLS posture, and secret-handling rules.
