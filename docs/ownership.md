@@ -3,36 +3,39 @@
 ## Ecosystem
 
 `call_analyzer` is the macOS desktop app at `../call_analyzer`. It stores
-lessons locally in SQLite. `call-analyzer-active-recall` does not exist yet. It
-will be a Cloud Run service that sends due vocabulary to Telegram and writes
-review results.
+lessons locally in SQLite and runs the vocabulary sync goroutine.
+`call-analyzer-active-recall` is the live Cloud Run service in GCP project
+`call-analyzer-512714`, region `asia-southeast1`. It reads confirmed
+vocabulary and sends up to ten words to Telegram at 9:00 `Asia/Singapore`.
+It does not write `study_state` or `review_events` yet.
 
 This repository owns the Supabase Postgres migrations and the meaning of the
-shared tables. It does not own the desktop app, the Telegram service, or the
-sync goroutine.
+shared tables. The hosted project ref is `zoiwsytnyrdifggwleru`. Migration
+`20261025103511_initial_schema.sql` is applied. It does not own the desktop
+app, the Telegram service, or the sync goroutine.
 
 ## Table ownership
 
-The desktop app writes:
+The schema includes `lessons`, `transcript_segments`, `vocabulary_entries`,
+`senses`, `examples`, `observations`, `tags`, `entry_tags`, `study_state`,
+and `review_events`.
 
-- `lessons`
-- `transcript_segments`
-- `vocabulary_entries`
-- `senses`
-- `examples`
-- `observations`
-- `tags`
-- `entry_tags`
+What the running apps do now:
 
-The future recall service appends `review_events` and updates `study_state`.
-The desktop pulls those two tables and does not push them back over a newer
-cloud row.
+- The desktop runner pushes the current SQLite row for confirmed and manually
+  saved vocabulary, including senses, examples, tags, and entry tags. A merged
+  candidate is not pushed. When its target is confirmed, that target is pushed
+  again so the moved child rows are included.
+- The first confirmed or manual publish inserts `study_state` with
+  ignore-duplicates. Later study updates are not pushed.
+- On launch the desktop pulls confirmed vocabulary. A newer local `updated_at`
+  wins. `SyncNow` uploads and does not pull.
+- The recall service reads confirmed `vocabulary_entries` and their senses. It
+  does not write.
 
-The desktop vocabulary runner pushes the current SQLite row for confirmed and
-manually saved vocabulary entries, including their senses, examples, and tags.
-A merged candidate is not pushed. When its target is confirmed, that target is
-pushed again so the moved child rows are included. The runner does not
-overwrite `study_state`; review state remains owned by the recall workflow.
+`lessons`, `transcript_segments`, `observations`, and `review_events` are in
+the schema and are not written by either app yet. Quiz replies are the
+intended later writer of `review_events` and `study_state` updates.
 
 These SQLite tables are local-only and must never be added here:
 

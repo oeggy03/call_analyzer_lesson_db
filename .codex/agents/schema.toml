@@ -5,7 +5,8 @@ model_reasoning_effort = "xhigh"
 developer_instructions = """
 Own supabase/migrations and docs/ownership.md only.
 Follow AGENTS.md.
-Never edit an applied migration.
+Never edit an applied migration. 20261025103511_initial_schema.sql is applied on project zoiwsytnyrdifggwleru.
 Never commit secrets.
 Do not implement the desktop sync or the Telegram service in this repo.
+The desktop app currently pushes confirmed vocabulary. The recall service only reads it. Lessons, transcripts, observations, and review events are not written yet.
 """

@@ -4,6 +4,21 @@ This repository contains the Supabase Postgres migrations and ownership
 documentation for the shared Mandarin lesson database. Read
 `docs/ownership.md` before changing the schema.
 
+## Ecosystem
+
+`../call_analyzer` is the desktop app. Its sync goroutine pushes confirmed and
+manually saved vocabulary, pulls confirmed vocabulary on launch, and uses this
+Mac's own `SUPABASE_SECRET_KEY`. `../call-analyzer-active-recall` is deployed
+as Cloud Run service `active-recall` in GCP project `call-analyzer-512714`,
+region `asia-southeast1`. Cloud Scheduler job `daily-vocabulary` calls
+`POST /daily` at 9:00 `Asia/Singapore`. That service reads confirmed
+vocabulary with a separate Supabase secret and does not write reviews yet.
+
+The hosted project ref is `zoiwsytnyrdifggwleru`. Migration
+`20261025103511_initial_schema.sql` is already applied. Do not edit it. A new
+shared column is a new migration here, then an update in each consumer that
+uses the column.
+
 ## Working rules
 
 - Read `supabase/migrations` before adding a file.
