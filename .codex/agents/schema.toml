@@ -1,0 +1,11 @@
+name = "schema"
+description = "Add Postgres migrations and ownership docs for the shared lesson database."
+model = "gpt-6-luna"
+model_reasoning_effort = "xhigh"
+developer_instructions = """
+Own supabase/migrations and docs/ownership.md only.
+Follow AGENTS.md.
+Never edit an applied migration.
+Never commit secrets.
+Do not implement the desktop sync or the Telegram service in this repo.
+"""

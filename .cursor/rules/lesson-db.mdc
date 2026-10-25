@@ -1,0 +1,7 @@
+---
+description: Lesson database schema and ownership
+alwaysApply: true
+---
+
+Follow `AGENTS.md` and `docs/ownership.md`.
+Do not edit applied migrations.
