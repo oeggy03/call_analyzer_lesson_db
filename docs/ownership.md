@@ -28,6 +28,12 @@ The future recall service appends `review_events` and updates `study_state`.
 The desktop pulls those two tables and does not push them back over a newer
 cloud row.
 
+The desktop vocabulary runner pushes the current SQLite row for confirmed and
+manually saved vocabulary entries, including their senses, examples, and tags.
+A merged candidate is not pushed. When its target is confirmed, that target is
+pushed again so the moved child rows are included. The runner does not
+overwrite `study_state`; review state remains owned by the recall workflow.
+
 These SQLite tables are local-only and must never be added here:
 
 - `outbox`
